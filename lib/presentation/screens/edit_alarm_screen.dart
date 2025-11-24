@@ -32,6 +32,8 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   // 모든 assets 사운드 파일 목록
+  // 출처: Mixkit (https://mixkit.co/) - 무료 사운드 효과
+  // 라이선스: https://mixkit.co/license/ (무료 사용, 상업적 사용 가능, 출처 표기 불필요)
   static const List<Map<String, String>> _allSoundOptions = [
     {
       'path': 'assets/sounds/mixkit-driving-ambition-32.mp3',
