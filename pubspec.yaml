@@ -59,7 +59,7 @@ dependencies:
   audioplayers: ^6.1.0
   
   # 진동
-  vibration: ^1.8.4
+  vibration: ^3.1.4
 
 dev_dependencies:
   flutter_test:
@@ -91,13 +91,8 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-assets:
-  - assets/sounds/mixkit-wrong-long-buzzer-954.wav
-  - assets/sounds/mixkit-magic-festive-melody-2986.wav
-  - assets/sounds/mixkit-horde-of-barking-dogs-60.wav
-  - assets/sounds/mixkit-driving-ambition-32.mp3
-  - assets/sounds/mixkit-gimme-that-groove-872.mp3
-  - assets/sounds/mixkit-hey-billy-803.mp3
+  assets:
+    - assets/sounds/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

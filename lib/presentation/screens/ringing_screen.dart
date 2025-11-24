@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle, HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 import 'dart:async';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, File;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../domain/entities/alarm.dart';
 import '../../domain/entities/alarm_log.dart';
 import '../../infrastructure/services/alarm_scheduler.dart';
@@ -61,7 +62,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
       // 진동 권한 확인
       if (Platform.isAndroid) {
         final hasVibrator = await Vibration.hasVibrator();
-        if (hasVibrator == null || !hasVibrator) {
+        if (!hasVibrator) {
           developer.log('⚠️ 진동 기능을 사용할 수 없습니다');
           return;
         }
@@ -161,12 +162,39 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
         _startIOSSoundLoop(fileName);
       } else {
         // Android: assets 파일 사용 (audioplayers 사용)
-        // 반복 재생 설정
-        await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-        await _audioPlayer.play(
-          AssetSource(soundPath.replaceFirst('assets/', '')),
-        );
-        developer.log('🔊 [Android] 알람 소리 반복 재생 시작: $soundPath');
+        // AssetSource는 'assets/' 접두사 없이 경로를 받아야 함
+        // 예: 'assets/sounds/file.mp3' -> 'sounds/file.mp3'
+        String assetPath = soundPath;
+        if (assetPath.startsWith('assets/')) {
+          assetPath = assetPath.substring(7); // 'assets/'.length = 7
+        }
+        developer.log('🔊 [Android] 원본 경로: $soundPath');
+        developer.log('🔊 [Android] 변환된 경로: $assetPath');
+
+        try {
+          // 반복 재생 설정
+          await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+          await _audioPlayer.play(AssetSource(assetPath));
+          developer.log('🔊 [Android] 알람 소리 반복 재생 시작 성공: $assetPath');
+        } catch (e) {
+          developer.log('❌ [Android] AssetSource 재생 실패: $e');
+          developer.log('   시도한 경로: $assetPath');
+          // 대안: rootBundle을 사용하여 직접 로드
+          try {
+            final byteData = await rootBundle.load(soundPath);
+            final tempDir = await getTemporaryDirectory();
+            final tempFile = File(
+              '${tempDir.path}/${soundPath.split('/').last}',
+            );
+            await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            await _audioPlayer.play(DeviceFileSource(tempFile.path));
+            developer.log('🔊 [Android] 임시 파일로 재생 성공: ${tempFile.path}');
+          } catch (e2) {
+            developer.log('❌ [Android] 임시 파일 재생도 실패: $e2');
+            rethrow;
+          }
+        }
       }
     } catch (e) {
       developer.log('❌ 알람 소리 재생 실패: $e');

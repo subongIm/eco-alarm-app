@@ -115,11 +115,15 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
         await RingtoneService.playRingtone(fileName);
       } else {
         // Android: assets 파일 사용 (audioplayers 사용)
+        // AssetSource는 'assets/' 접두사 없이 경로를 받아야 함
+        // 예: 'assets/sounds/file.mp3' -> 'sounds/file.mp3'
+        String assetPath = soundPath;
+        if (assetPath.startsWith('assets/')) {
+          assetPath = assetPath.substring(7); // 'assets/'.length = 7
+        }
         // 이전 재생 중지
         await _audioPlayer.stop();
-        await _audioPlayer.play(
-          AssetSource(soundPath.replaceFirst('assets/', '')),
-        );
+        await _audioPlayer.play(AssetSource(assetPath));
       }
     } catch (e) {
       // 재생 실패 시 무시 (에러 로그만 출력)
@@ -315,7 +319,7 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
           TextField(
             controller: _labelController,
             decoration: const InputDecoration(
-              labelText: '라벨',
+              labelText: '알람 이름',
               hintText: '알람 이름을 입력하세요',
               border: OutlineInputBorder(),
             ),
