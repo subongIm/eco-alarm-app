@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io' show Platform;
 import 'dart:developer' as developer;
 import 'infrastructure/datasources/local_db.dart';
@@ -12,12 +14,20 @@ import 'presentation/screens/permission_screen.dart';
 import 'domain/entities/alarm.dart';
 
 /*
-Flutter 바인딩 보장 → 안드로이드 알람 매니저(안드로이드일 때만) 
+Flutter 바인딩 보장 → 안드로이드 z알람 매니저(안드로이드일 때만) 
 → Hive DB(Hive 어댑터 등록 및 박스 오픈) → 로컬 알림 플러그인 초기화 순서로 실행됩니다.
 초기화 로그가 여기서 출력됩니다.
 */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // .env 파일 로드
+  try {
+    await dotenv.load(fileName: '.env');
+    developer.log('.env 파일 로드 완료');
+  } catch (e) {
+    developer.log('.env 파일 로드 실패: $e');
+  }
 
   try {
     // Android 전용: 알람 매니저 초기화
@@ -43,6 +53,21 @@ void main() async {
     developer.log('AlarmScheduler 초기화 완료');
   } catch (e) {
     developer.log('AlarmScheduler 초기화 실패: $e');
+  }
+
+  try {
+    // Supabase 초기화 (환경변수에서 가져오기)
+    final supabaseUrl = dotenv.env['SUPABASE_URL'] ?? '';
+    final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+
+    if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
+      throw Exception('Supabase 환경변수가 설정되지 않았습니다. .env 파일을 확인하세요.');
+    }
+
+    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+    developer.log('Supabase 초기화 완료');
+  } catch (e) {
+    developer.log('Supabase 초기화 실패: $e');
   }
 
   runApp(const ProviderScope(child: MyApp()));
