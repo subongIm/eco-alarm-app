@@ -45,6 +45,18 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
     },
     {'path': 'assets/sounds/mixkit-hey-billy-803.mp3', 'title': 'Hey Billy'},
     {
+      'path': 'assets/sounds/mixkit-classic-alarm-995.wav',
+      'title': 'Classic Alarm',
+    },
+    {
+      'path': 'assets/sounds/mixkit-morning-clock-alarm-1003.wav',
+      'title': 'Morning Clock Alarm',
+    },
+    {
+      'path': 'assets/sounds/mixkit-short-rooster-crowing-2470.wav',
+      'title': 'Rooster Crowing',
+    },
+    {
       'path': 'assets/sounds/mixkit-horde-of-barking-dogs-60.wav',
       'title': 'Barking Dogs',
     },
@@ -59,16 +71,11 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
   ];
 
   // 플랫폼별 사운드 옵션 가져오기
+  // 현재는 Android/iOS 모두에서 .wav 파일만 노출되도록 통일
   List<Map<String, String>> get _soundOptions {
-    if (Platform.isIOS) {
-      // iOS: 번들에 포함된 .wav 파일만 (번들에 추가된 파일들)
-      return _allSoundOptions
-          .where((sound) => sound['path']?.endsWith('.wav') ?? false)
-          .toList();
-    } else {
-      // Android: 모든 사운드 파일
-      return _allSoundOptions;
-    }
+    return _allSoundOptions
+        .where((sound) => sound['path']?.endsWith('.wav') ?? false)
+        .toList();
   }
 
   @override

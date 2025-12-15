@@ -112,12 +112,14 @@ import AudioToolbox
       }
       
       if let soundPath = soundPath {
+        print("[Ringtone] ✅ 번들에서 사운드 파일 찾음: \(uri) -> \(soundPath)")
         let soundURL = URL(fileURLWithPath: soundPath)
         audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
         audioPlayer?.prepareToPlay()
         audioPlayer?.play()
         result(true)
       } else {
+        print("[Ringtone] ⚠️ 번들에서 사운드 파일을 찾지 못했습니다: \(uri)")
         // 시스템 사운드 ID 사용
         let systemSoundId: SystemSoundID
         switch uri {
@@ -133,9 +135,20 @@ import AudioToolbox
           systemSoundId = 1002
         case "ring":
           systemSoundId = 1003
+        // eco_alarm에서 사용하는 커스텀 파일 이름에 대한 구분 처리
+        case _ where uri.contains("classic-alarm-995"):
+          // 클래식 알람
+          systemSoundId = 1005
+        case _ where uri.contains("morning-clock-alarm-1003"):
+          // 모닝 알람
+          systemSoundId = 1006
+        case _ where uri.contains("short-rooster-crowing-2470"):
+          // 닭 울음
+          systemSoundId = 1007
         default:
           systemSoundId = 1005 // 기본 알림 소리
         }
+        print("[Ringtone] 🔊 시스템 사운드로 대체 재생: uri=\(uri), id=\(systemSoundId)")
         AudioServicesPlaySystemSound(systemSoundId)
         result(true)
       }

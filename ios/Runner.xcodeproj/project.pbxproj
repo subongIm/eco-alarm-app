@@ -10,15 +10,18 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		4FC622222EF03F80002C872D /* mixkit-wrong-long-buzzer-954.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC622212EF03F80002C872D /* mixkit-wrong-long-buzzer-954.wav */; };
+		4FC622232EF03F80002C872D /* mixkit-short-rooster-crowing-2470.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC622202EF03F80002C872D /* mixkit-short-rooster-crowing-2470.wav */; };
+		4FC622242EF03F80002C872D /* mixkit-magic-festive-melody-2986.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC6221E2EF03F80002C872D /* mixkit-magic-festive-melody-2986.wav */; };
+		4FC622252EF03F80002C872D /* mixkit-morning-clock-alarm-1003.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC6221F2EF03F80002C872D /* mixkit-morning-clock-alarm-1003.wav */; };
+		4FC622262EF03F80002C872D /* mixkit-classic-alarm-995.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC6221C2EF03F80002C872D /* mixkit-classic-alarm-995.wav */; };
+		4FC622272EF03F80002C872D /* mixkit-horde-of-barking-dogs-60.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4FC6221D2EF03F80002C872D /* mixkit-horde-of-barking-dogs-60.wav */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		99B717AD386ABF1EB515D32C /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6EFC5CE622AE0A3BE5329A /* Pods_RunnerTests.framework */; };
 		E314926934FE13E97E25703C /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0E9E3647F0D1B9B765B907 /* Pods_Runner.framework */; };
-		98466B47996916006E115F30 /* mixkit-horde-of-barking-dogs-60.wav in Resources */ = {isa = PBXBuildFile; fileRef = 98466B47996916006E115F29 /* mixkit-horde-of-barking-dogs-60.wav */; };
-		ED2286B120CD0124883EB322 /* mixkit-magic-festive-melody-2986.wav in Resources */ = {isa = PBXBuildFile; fileRef = ED2286B120CD0124883EB321 /* mixkit-magic-festive-melody-2986.wav */; };
-		8533F9C6D8363E20E3246986 /* mixkit-wrong-long-buzzer-954.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8533F9C6D8363E20E3246985 /* mixkit-wrong-long-buzzer-954.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,12 @@
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4CC1694AF393819A5080DD3B /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		4FC6221C2EF03F80002C872D /* mixkit-classic-alarm-995.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-classic-alarm-995.wav"; sourceTree = "<group>"; };
+		4FC6221D2EF03F80002C872D /* mixkit-horde-of-barking-dogs-60.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-horde-of-barking-dogs-60.wav"; sourceTree = "<group>"; };
+		4FC6221E2EF03F80002C872D /* mixkit-magic-festive-melody-2986.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-magic-festive-melody-2986.wav"; sourceTree = "<group>"; };
+		4FC6221F2EF03F80002C872D /* mixkit-morning-clock-alarm-1003.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-morning-clock-alarm-1003.wav"; sourceTree = "<group>"; };
+		4FC622202EF03F80002C872D /* mixkit-short-rooster-crowing-2470.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-short-rooster-crowing-2470.wav"; sourceTree = "<group>"; };
+		4FC622212EF03F80002C872D /* mixkit-wrong-long-buzzer-954.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-wrong-long-buzzer-954.wav"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -68,9 +77,6 @@
 		D4B7BC647DE37810BE7D1DD3 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		D895E99F98F1AF4D49882837 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		F36FE2262E0D17595F80AB39 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		98466B47996916006E115F29 /* mixkit-horde-of-barking-dogs-60.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-horde-of-barking-dogs-60.wav"; sourceTree = "<group>"; };
-		ED2286B120CD0124883EB321 /* mixkit-magic-festive-melody-2986.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-magic-festive-melody-2986.wav"; sourceTree = "<group>"; };
-		8533F9C6D8363E20E3246985 /* mixkit-wrong-long-buzzer-954.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-wrong-long-buzzer-954.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,9 +172,12 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
-				98466B47996916006E115F29 /* mixkit-horde-of-barking-dogs-60.wav */,
-				ED2286B120CD0124883EB321 /* mixkit-magic-festive-melody-2986.wav */,
-				8533F9C6D8363E20E3246985 /* mixkit-wrong-long-buzzer-954.wav */,
+				4FC6221C2EF03F80002C872D /* mixkit-classic-alarm-995.wav */,
+				4FC6221D2EF03F80002C872D /* mixkit-horde-of-barking-dogs-60.wav */,
+				4FC6221E2EF03F80002C872D /* mixkit-magic-festive-melody-2986.wav */,
+				4FC6221F2EF03F80002C872D /* mixkit-morning-clock-alarm-1003.wav */,
+				4FC622202EF03F80002C872D /* mixkit-short-rooster-crowing-2470.wav */,
+				4FC622212EF03F80002C872D /* mixkit-wrong-long-buzzer-954.wav */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -271,11 +280,14 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
+				4FC622222EF03F80002C872D /* mixkit-wrong-long-buzzer-954.wav in Resources */,
+				4FC622232EF03F80002C872D /* mixkit-short-rooster-crowing-2470.wav in Resources */,
+				4FC622242EF03F80002C872D /* mixkit-magic-festive-melody-2986.wav in Resources */,
+				4FC622252EF03F80002C872D /* mixkit-morning-clock-alarm-1003.wav in Resources */,
+				4FC622262EF03F80002C872D /* mixkit-classic-alarm-995.wav in Resources */,
+				4FC622272EF03F80002C872D /* mixkit-horde-of-barking-dogs-60.wav in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				98466B47996916006E115F30 /* mixkit-horde-of-barking-dogs-60.wav in Resources */,
-				ED2286B120CD0124883EB322 /* mixkit-magic-festive-melody-2986.wav in Resources */,
-				8533F9C6D8363E20E3246986 /* mixkit-wrong-long-buzzer-954.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

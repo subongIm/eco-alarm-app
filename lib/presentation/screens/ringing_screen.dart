@@ -9,10 +9,10 @@ import 'dart:math' show Random;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../infrastructure/services/ringtone_service.dart';
 import '../../domain/entities/alarm.dart';
 import '../../domain/entities/alarm_log.dart';
 import '../../infrastructure/services/alarm_scheduler.dart';
-import '../../infrastructure/services/ringtone_service.dart';
 import '../../infrastructure/datasources/local_db.dart';
 import '../../application/providers/ringing_providers.dart';
 import '../../application/providers/alarm_providers.dart';
@@ -121,7 +121,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
             _generateRandomRates();
           });
         }
-        developer.log('USD 환율 가져오기 성공: ${_usdRate}');
+        developer.log('USD 환율 가져오기 성공: $_usdRate');
       } else {
         if (mounted) {
           setState(() {
@@ -173,7 +173,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                 '[한국 기준 금리] : ${dataValue.toStringAsFixed(2)}% ($formattedDate 기준)';
           });
         }
-        developer.log('한국 기준금리 가져오기 성공: ${_baseRate}');
+        developer.log('한국 기준금리 가져오기 성공: $_baseRate');
       } else {
         if (mounted) {
           setState(() {
@@ -287,15 +287,11 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
       }
 
       if (Platform.isIOS) {
-        // iOS: 번들에 포함된 파일 사용 (RingtoneService 사용)
-        // 번들 파일 이름만 추출 (확장자 포함)
+        // iOS: Runner 번들에 포함된 wav 등을 파일명으로 재생
         final fileName = soundPath.split('/').last;
-        // RingtoneService를 통해 번들 파일 재생
-        // iOS에서는 반복 재생을 위해 별도 처리 필요
         await RingtoneService.playRingtone(fileName);
-        // iOS는 RingtoneService가 반복 재생을 지원하지 않으므로
-        // 주기적으로 재생하도록 타이머 사용
         _startIOSSoundLoop(fileName);
+        developer.log('🔊 [iOS] 번들 사운드 재생 시작: $fileName');
       } else {
         // Android: assets 파일 사용 (audioplayers 사용)
         // AssetSource는 'assets/' 접두사 없이 경로를 받아야 함
@@ -311,7 +307,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
           // 반복 재생 설정
           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
           await _audioPlayer.play(AssetSource(assetPath));
-          developer.log('🔊 [Android] 알람 소리 반복 재생 시작 성공: $assetPath');
+          developer.log('🔊 [Android] 반복 재생 시작 성공: $assetPath');
         } catch (e) {
           developer.log('❌ [Android] AssetSource 재생 실패: $e');
           developer.log('   시도한 경로: $assetPath');
@@ -374,14 +370,14 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
         });
       }
 
-      if (Platform.isAndroid) {
-        await _audioPlayer.stop();
-        developer.log('🔇 [Android] 알람 소리 중지');
-      } else {
+      if (Platform.isIOS) {
         await RingtoneService.stopRingtone();
         _iosSoundTimer?.cancel();
         _iosSoundTimer = null;
         developer.log('🔇 [iOS] 알람 소리 중지');
+      } else {
+        await _audioPlayer.stop();
+        developer.log('🔇 [Android] 알람 소리 중지');
       }
     } catch (e) {
       developer.log('❌ 알람 소리 중지 실패: $e');
@@ -407,86 +403,6 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
     // _dismiss()나 _dismissAll()에서 이미 상태를 업데이트했을 가능성이 높음
     // dispose 중에는 Provider를 수정하지 않음 (위젯 트리 빌드 중일 수 있음)
     super.dispose();
-  }
-
-  // 알람 종료 후 스누즈 시간 후 다시 알람 예약
-  Future<void> _dismiss() async {
-    // 진동 중지
-    await _stopVibration();
-    // 알람 소리 중지
-    await _stopAlarmSound();
-    developer.log('🔔 [알람 종료] 스누즈 알람 예약 시작');
-    developer.log('   📋 원본 알람 ID: ${widget.alarm.id}');
-    developer.log('   ⏰ 스누즈 시간: ${widget.alarm.snoozeMinutes}분');
-
-    // 현재 알람 해제
-    await AlarmScheduler.cancelAlarm(widget.alarm.id);
-    developer.log('   ✅ 현재 알람 취소 완료');
-
-    // 기존 스누즈 알람 취소 (중복 방지)
-    final allAlarms = LocalDatabase.getAllAlarms();
-    final snoozePrefix = '__SNOOZE__:${widget.alarm.id}';
-    for (var alarm in allAlarms) {
-      if (alarm.label == snoozePrefix) {
-        await AlarmScheduler.cancelAlarm(alarm.id);
-        await LocalDatabase.deleteAlarm(alarm.id);
-        developer.log('   🗑️ 기존 스누즈 알람 삭제: ${alarm.id}');
-      }
-    }
-
-    // 스누즈 시간 후 재예약
-    // 디바이스 현재 시간을 기준으로 정확히 스누즈 시간(분) 후로 계산
-    final now = DateTime.now();
-    final snoozeTime = now.add(Duration(minutes: widget.alarm.snoozeMinutes));
-
-    developer.log('   📅 [디바이스 현재 시간] $now');
-    developer.log(
-      '   ⏰ [스누즈 시간 계산] 현재 시간 + ${widget.alarm.snoozeMinutes}분 = $snoozeTime',
-    );
-    developer.log(
-      '   🕐 [스누즈 알람 설정 시간] ${snoozeTime.hour.toString().padLeft(2, '0')}:${snoozeTime.minute.toString().padLeft(2, '0')}',
-    );
-
-    final snoozeAlarm = widget.alarm.copyWith(
-      id: const Uuid().v4(), // 새로운 알람 ID 생성
-      time:
-          '${snoozeTime.hour.toString().padLeft(2, '0')}:${snoozeTime.minute.toString().padLeft(2, '0')}',
-      repeat: [], // 스누즈 알람은 반복 없음
-      enabled: true, // 스누즈 알람 활성화
-      // 목록에서 숨기기 위한 내부 식별 라벨 부여 (원본 알람 ID 포함)
-      label: '__SNOOZE__:${widget.alarm.id}',
-      // 원본 알람의 index 저장 (원본 알람 삭제 시 스누즈 알람도 함께 삭제하기 위해)
-      originalAlarmIndex: widget.alarm.id,
-    );
-    developer.log('   🆔 [스누즈 알람 ID] ${snoozeAlarm.id}');
-    developer.log('   ⏰ [스누즈 알람 최종 시간] ${snoozeAlarm.time}');
-
-    // 스누즈 알람을 데이터베이스에 저장
-    await LocalDatabase.saveAlarm(snoozeAlarm);
-    developer.log('   💾 스누즈 알람 데이터베이스 저장 완료');
-
-    // 스누즈 알람 예약
-    await AlarmScheduler.scheduleAlarm(snoozeAlarm);
-    developer.log('   ✅ 스누즈 알람 예약 완료');
-
-    // Provider에 스누즈 상태 업데이트
-    ref.read(ringingProvider.notifier).setSnoozeScheduled(snoozeAlarm.id);
-
-    // 알람 리스트 새로고침 (스누즈 알람 추가됨)
-    ref.read(alarmNotifierProvider.notifier).refresh();
-
-    // 로그 저장
-    final log = AlarmLog(
-      id: const Uuid().v4(),
-      alarmId: widget.alarm.id,
-      firedAt: DateTime.now(),
-      action: 'dismiss',
-    );
-    await LocalDatabase.saveAlarmLog(log);
-
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
   }
 
   // 환율 기반 랜덤 값 4개 생성 (3개 랜덤 + 1개 실제 값, 랜덤 인덱스 배치)
@@ -526,7 +442,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
 
     // 실제 환율 값이 들어갈 랜덤 인덱스 선택 (0~3)
     final actualRateIndex = random.nextInt(4);
-    _randomRates[actualRateIndex] = _actualRateText ?? '로딩 중...';
+    _randomRates[actualRateIndex] = _actualRateText!;
 
     // 나머지 3개 인덱스에 랜덤 값 배치
     int randomValueIndex = 0;
@@ -542,9 +458,15 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
   Future<void> _showDismissDialog() async {
     _selectedRadioValue = null; // 다이얼로그 열 때 초기화
 
-    // 환율 기반 랜덤 값이 없으면 생성
-    if (_randomRates.isEmpty && _usdRateValue != null) {
-      _generateRandomRates();
+    // 환율 기반 랜덤 값이 없거나 로딩 중이면 생성
+    if (_randomRates.isEmpty || _usdRateValue == null) {
+      if (_usdRateValue != null) {
+        _generateRandomRates();
+      } else {
+        // 환율이 아직 로딩 중이면 기본값 설정
+        _randomRates = ['로딩 중...', '로딩 중...', '로딩 중...', '로딩 중...'];
+        _actualRateText = '로딩 중...';
+      }
     }
 
     if (!mounted) return;
@@ -592,7 +514,8 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _randomRates.isNotEmpty
+                            _randomRates.isNotEmpty &&
+                                    _randomRates[0].isNotEmpty
                                 ? _randomRates[0]
                                 : '로딩 중...',
                             style: const TextStyle(
@@ -619,7 +542,8 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _randomRates.length > 1
+                            _randomRates.length > 1 &&
+                                    _randomRates[1].isNotEmpty
                                 ? _randomRates[1]
                                 : '로딩 중...',
                             style: const TextStyle(
@@ -646,7 +570,8 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _randomRates.length > 2
+                            _randomRates.length > 2 &&
+                                    _randomRates[2].isNotEmpty
                                 ? _randomRates[2]
                                 : '로딩 중...',
                             style: const TextStyle(
@@ -673,7 +598,8 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _randomRates.length > 3
+                            _randomRates.length > 3 &&
+                                    _randomRates[3].isNotEmpty
                                 ? _randomRates[3]
                                 : '로딩 중...',
                             style: const TextStyle(
@@ -720,6 +646,7 @@ class _RingingScreenState extends ConsumerState<RingingScreen> {
                     // 선택된 값과 실제 환율 값 비교
                     if (selectedIndex >= 0 &&
                         selectedIndex < _randomRates.length &&
+                        _actualRateText != null &&
                         _randomRates[selectedIndex] == _actualRateText) {
                       // 일치하면 알람 종료 및 스누즈 알람 제거
                       Navigator.of(context).pop(); // 다이얼로그 닫기
