@@ -28,9 +28,9 @@ Flutter 기반 알람 앱입니다.
 - 자세한 라이선스 정보는 [Mixkit 라이선스 페이지](https://mixkit.co/license/)를 참조하세요.
 
 ### 사용된 사운드 파일
-- `mixkit-driving-ambition-32.mp3`
-- `mixkit-gimme-that-groove-872.mp3`
-- `mixkit-hey-billy-803.mp3`
+- `mixkit-classic-alarm-995.wav`
+- `mixkit-morning-clock-alarm-1003.wav`
+- `mixkit-short-rooster-crowing-2470.wav`
 - `mixkit-horde-of-barking-dogs-60.wav`
 - `mixkit-magic-festive-melody-2986.wav`
 - `mixkit-wrong-long-buzzer-954.wav`
